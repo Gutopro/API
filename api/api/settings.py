@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import logging.config
+import os
+from django.utils.log import DEFAULT_LOGGING
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -87,6 +90,25 @@ TEMPLATES = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'api_app/log.txt',
+        },
+    },
+    'loggers': {
+        'api_logger': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'PROPAGATE': False,
+        },
+    },
+}
+
 WSGI_APPLICATION = "api.wsgi.application"
 
 
@@ -131,6 +153,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+    }
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
